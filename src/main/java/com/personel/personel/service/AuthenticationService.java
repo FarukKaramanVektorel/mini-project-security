@@ -25,14 +25,14 @@ public class AuthenticationService {
 	private final AuthenticationManager authenticationManager;
 
 	public AuthenticationResponse register(RegisterRequest request) throws Exception {
-		if(!userRepository.existsByEmail(request.getEMail())) {		
+		if(!userRepository.existsByEmail(request.getEmail())) {		
 		var user = User.builder().name(request.getName()).username(request.getUsername())
-				.password(passwordEncoder.encode(request.getPassword())).role(Role.USER).build();
+				.password(passwordEncoder.encode(request.getPassword())).role(Role.USER).email(request.getEmail()).build();
 		userRepository.save(user);
 		var jwtToken = jwtService.generateToken(user.getUsername());
 		return AuthenticationResponse.builder().token(jwtToken).build();
 		}else {
-			throw new Exception("Bu email önceden kayıt olmuş..." +request.getEMail());
+			throw new Exception("Bu email önceden kayıt olmuş..." +request.getEmail());
 		}
 	}
 

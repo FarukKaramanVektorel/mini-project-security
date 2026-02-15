@@ -19,6 +19,6 @@ public class RegisterRequest {
 	private String username;
 	private String password;
 	@NotNull(message = "E-mail bilgisi zorunlu...")
-	private String eMail;
+	private String email;
 
 }
