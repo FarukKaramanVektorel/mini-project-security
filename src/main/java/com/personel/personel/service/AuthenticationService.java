@@ -1,5 +1,7 @@
 package com.personel.personel.service;
 
+import java.util.Optional;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,12 +24,16 @@ public class AuthenticationService {
 	private final JwtService jwtService;
 	private final AuthenticationManager authenticationManager;
 
-	public AuthenticationResponse register(RegisterRequest request) {
+	public AuthenticationResponse register(RegisterRequest request) throws Exception {
+		if(!userRepository.existsByEmail(request.getEMail())) {		
 		var user = User.builder().name(request.getName()).username(request.getUsername())
 				.password(passwordEncoder.encode(request.getPassword())).role(Role.USER).build();
 		userRepository.save(user);
 		var jwtToken = jwtService.generateToken(user.getUsername());
 		return AuthenticationResponse.builder().token(jwtToken).build();
+		}else {
+			throw new Exception("Bu email önceden kayıt olmuş..." +request.getEMail());
+		}
 	}
 
 	public AuthenticationResponse authentication(AuthenticationRequest request) {

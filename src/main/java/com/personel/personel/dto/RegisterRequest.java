@@ -1,5 +1,10 @@
 package com.personel.personel.dto;
 
+
+
+
+
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,5 +18,7 @@ public class RegisterRequest {
 	private String name;
 	private String username;
 	private String password;
+	@NotNull(message = "E-mail bilgisi zorunlu...")
+	private String eMail;
 
 }
