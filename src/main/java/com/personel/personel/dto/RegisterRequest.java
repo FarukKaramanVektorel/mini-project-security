@@ -15,8 +15,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisterRequest {
+	@NotNull(message = "İsim bilgisi zorunlu...")
 	private String name;
+	@NotNull(message = "Nickname bilgisi zorunlu...")
 	private String username;
+	@NotNull(message = "Parola bilgisi zorunlu...")
 	private String password;
 	@NotNull(message = "E-mail bilgisi zorunlu...")
 	private String email;

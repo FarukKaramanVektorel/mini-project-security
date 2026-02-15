@@ -1,7 +1,5 @@
 package com.personel.personel.service;
 
-import java.util.Optional;
-
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,6 +10,7 @@ import com.personel.personel.dto.AuthenticationResponse;
 import com.personel.personel.dto.RegisterRequest;
 import com.personel.personel.entity.Role;
 import com.personel.personel.entity.User;
+import com.personel.personel.exception.UserDuplicateException;
 import com.personel.personel.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -24,16 +23,20 @@ public class AuthenticationService {
 	private final JwtService jwtService;
 	private final AuthenticationManager authenticationManager;
 
-	public AuthenticationResponse register(RegisterRequest request) throws Exception {
-		if(!userRepository.existsByEmail(request.getEmail())) {		
+	public AuthenticationResponse register(RegisterRequest request) throws UserDuplicateException {
+		
+		if(userRepository.existsByEmail(request.getEmail())||
+				userRepository.existsByUsername(request.getUsername())) {
+			throw new UserDuplicateException("Bu Kullanıcı önceden kayıt olmuş..." );
+		}
+		
+		
 		var user = User.builder().name(request.getName()).username(request.getUsername())
 				.password(passwordEncoder.encode(request.getPassword())).role(Role.USER).email(request.getEmail()).build();
 		userRepository.save(user);
 		var jwtToken = jwtService.generateToken(user.getUsername());
 		return AuthenticationResponse.builder().token(jwtToken).build();
-		}else {
-			throw new Exception("Bu email önceden kayıt olmuş..." +request.getEmail());
-		}
+		
 	}
 
 	public AuthenticationResponse authentication(AuthenticationRequest request) {
