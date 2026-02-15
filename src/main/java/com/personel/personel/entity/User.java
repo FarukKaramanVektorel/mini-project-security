@@ -45,15 +45,28 @@ public class User implements UserDetails{
 	}
 
 	@Override
-	public @Nullable String getPassword() {
-		// TODO Auto-generated method stub
-		return null;
+	public @Nullable String getPassword() {		
+		return password;
 	}
 
 	@Override
 	public String getUsername() {
-		// TODO Auto-generated method stub
-		return null;
+		return username;
+	}
+	
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+	
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+	
+	@Override
+	public boolean isEnabled() {
+		return true;
 	}
 
 }
